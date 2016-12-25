@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="cn.bdqn.oa.domain">
+
+	<class name="Topic" table="bdqn_Topic">
+		<id name="id">
+			<generator class="native" />
+		</id>
+		<property name="title" />
+		<property name="content" />
+		<property name="postTime" />
+		<property name="ipAddr" />
+		<!-- 作者 多对一 -->
+		<many-to-one name="author" class="User" column="authorId" />
+
+		<property name="type" />
+		<property name="replyCount" />
+		<property name="lastUpdateTime" />
+
+		<!-- lastReply属性，本类与Reply的一对一。 采用基于外键的一对一映射，本方有外键。 -->
+		<many-to-one name="lastReply" class="Reply" column="lastReplyId"
+			unique="true" />
+
+		<!-- 所属forum -->
+		<many-to-one name="forum" class="Forum" column="forumId" />
+
+		<!-- 下面回复集合 -->
+		<set name="replies">
+			<key column="topicId"></key>
+			<one-to-many class="Reply" />
+		</set>
+
+	</class>
+
+</hibernate-mapping>

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+	<!-- 配置为开发模式 -->
+	<constant name="struts.devMode" value="true" />
+	<!-- 把扩展名配置为action -->
+	<constant name="struts.action.extension" value="action" />
+	<!-- 把主题配置为simple -->
+	<constant name="struts.ui.theme" value="simple" />
+
+
+	<constant name="struts.i18n.encoding" value="utf8"></constant>
+<!-- 文件夹菜单树 -->
+	<package name="menuitem" namespace="/" extends="json-default">
+		<action name="menuitemAction_*" method="{1}" class="menuitemAction">
+			<result type="json"></result>
+		</action>
+	</package>
+
+
+
+
+
+	<package name="default" namespace="/" extends="struts-default">
+		<!-- 拦截每个请求验证权限 -->
+		<interceptors>
+			<!-- 声明拦截器 -->
+			<interceptor name="checkPrivilege"
+				class="cn.bdqn.oa.util.CheckPrivilegeInterceptor"></interceptor>
+			<!-- 重新定义默认拦截器栈 -->
+			<interceptor-stack name="defaultStack">
+				<interceptor-ref name="checkPrivilege"></interceptor-ref>
+				<interceptor-ref name="defaultStack"></interceptor-ref>
+			</interceptor-stack>
+		</interceptors>
+
+
+
+		<!-- 全局的Result配置 -->
+		<global-results>
+			<result name="loginUI">/WEB-INF/jsp/userAction/loginUI.jsp</result>
+			<result name="noPrivilegeError">/noPrivilegeError.jsp</result>
+		</global-results>
+
+		<!-- 文档管理跳转 -->
+		<action name="forwardAction_*" method="{1}"
+			class="cn.bdqn.oa.struts2.action.ForwardAction">
+			<result name="index">WEB-INF/jsp/frame/index.jsp</result>
+			<result name="left">WEB-INF/jsp/frame/left.jsp</result>
+			<result name="right">WEB-INF/jsp/frame/right.jsp</result>
+		</action>
+		
+		
+		<!-- 文件上传 下载 -->
+		<action name="fileDownload" class="cn.bdqn.oa.struts2.action.FileDownloadAction">
+			<result name="success" type="stream">
+				<param name="contentDisposition">attachment;filename="${downloadFileName}"</param>
+				<param name="inputName">downloadFile</param>
+			</result>
+		</action>
+
+		<action name="toFileUpload" class="cn.bdqn.oa.struts2.action.FileUploadAction"
+			method="addUI">
+			<result name="saveUI">/WEB-INF/jsp/uploadAction/saveUI.jsp</result>
+
+		</action>
+		<action name="fileUpload" class="cn.bdqn.oa.struts2.action.FileUploadAction"
+			method="uploadFile">
+			<result name="success">/index1.jsp</result>
+
+		</action>
+
+		<!-- 文件管理 -->
+		<action name="fileInfo_*" class="fileInfoAction" method="{1}">
+			<result name="list">/WEB-INF/jsp/fileInfoAction/list.jsp</result>
+			<result name="saveUI">/WEB-INF/jsp/fileInfoAction/saveUI.jsp</result>
+			<result name="toList" type="redirectAction">fileInfo_list?parentId=${parentId}
+			</result>
+		</action>
+
+		<action name="accessory_*" method="{1}" class="accessoryFileAction">
+			<result name="list">/WEB-INF/jsp/accessoryFile/list.jsp</result>
+			<result name="tomain">/WEB-INF/jsp/accessoryFile/main.jsp</result>
+
+			<result name="toleft">/WEB-INF/jsp/accessoryFile/left.jsp</result>
+		</action>
+		
+		<!-- 岗位管理 -->
+		<action name="role_*" class="roleAction" method="{1}">
+			<result name="list">/WEB-INF/jsp/roleAction/list.jsp</result>
+			<result name="saveUI">/WEB-INF/jsp/roleAction/saveUI.jsp</result>
+			<result name="setPrivilegeUI">/WEB-INF/jsp/roleAction/setPrivilegeUI.jsp
+			</result>
+
+			<result name="toList" type="redirectAction">role_list</result>
+		</action>
+
+
+
+		<!-- 部门管理 -->
+		<action name="department_*" class="departmentAction" method="{1}">
+			<result name="list">/WEB-INF/jsp/departmentAction/list.jsp</result>
+			<result name="saveUI">/WEB-INF/jsp/departmentAction/saveUI.jsp</result>
+			<result name="toList" type="redirectAction">department_list?parentId=${parentId}
+			</result>
+		</action>
+
+
+		<!-- 用户管理 -->
+		<action name="user_*" class="userAction" method="{1}">
+			<result name="list">/WEB-INF/jsp/userAction/list.jsp</result>
+			<result name="saveUI">/WEB-INF/jsp/userAction/saveUI.jsp</result>
+			<result name="toList" type="redirectAction">user_list</result>
+
+			<result name="logout">/WEB-INF/jsp/userAction/logout.jsp</result>
+			<result name="toIndex" type="redirect">/index.jsp</result>
+
+		</action>
+		<!-- 首页 -->
+		<action name="home_*" class="homeAction" method="{1}">
+			<result name="{1}">/WEB-INF/jsp/homeAction/{1}.jsp</result>
+		</action>
+
+		<!-- 论坛管理 -->
+		<action name="forumManage_*" class="forumManageAction" method="{1}">
+			<result name="list">/WEB-INF/jsp/forumManageAction/list.jsp</result>
+			<result name="saveUI">/WEB-INF/jsp/forumManageAction/saveUI.jsp
+			</result>
+			<result name="setPrivilegeUI">/WEB-INF/jsp/forumManageAction/setPrivilegeUI.jsp
+			</result>
+
+			<result name="toList" type="redirectAction">forumManage_list</result>
+		</action>
+
+	</package>
+
+
+</struts>

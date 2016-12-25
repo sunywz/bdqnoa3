@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="cn.bdqn.oa.domain">
+
+	<class name="User" table="bdqn_user">
+		<id name="id">
+			<generator class="native" />
+		</id>
+		<property name="loginName" />
+		<property name="password" />
+		<property name="name" />
+		<property name="gender" />
+		<property name="phoneNumber" />
+		<property name="email" />
+		<property name="description" />
+		<!-- departmen属性，本类与Department的多对一 -->
+		<!-- column多对一，在多的一方，直接是name+Id -->
+		<many-to-one name="department" class="Department" column="departmenId"></many-to-one>
+
+		<!-- roles属性，本类与Role的多对多 -->
+		<set name="roles" table="bdqn_user_role" lazy="false">
+			<!-- key主键指向本类id。 -->
+			<key column="userId"></key>
+			<many-to-many class="Role" column="roleId"></many-to-many>
+		</set>
+
+
+	</class>
+
+</hibernate-mapping>
